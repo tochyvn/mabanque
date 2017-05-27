@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 public class CompteEpargne extends Compte {
 	
 	private double plafond;
+	private double taux;
 	
 	public CompteEpargne() {
 		super();
@@ -18,7 +19,10 @@ public class CompteEpargne extends Compte {
 
 	public CompteEpargne(String codeCompte, Date dateCreation, double solde, Client client) {
 		super(codeCompte, dateCreation, solde, client);
+		//Plafond par défaut
 		setPlafond(10000);
+		//Taux d'intêret par defaut
+		setTaux(0.75);
 	}
 	
 	public double getPlafond() {
@@ -42,6 +46,13 @@ public class CompteEpargne extends Compte {
 	public double getMaxRetrait() {
 		return this.solde;
 	}
-	
+
+	public double getTaux() {
+		return taux;
+	}
+
+	public void setTaux(double taux) {
+		this.taux = taux;
+	}
 	
 }
