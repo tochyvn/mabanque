@@ -95,6 +95,13 @@ public abstract class Compte implements Serializable {
 	public abstract boolean ifPossible(double montant);
 	
 	public abstract double getMaxRetrait();
+
+	@Override
+	public String toString() {
+		return "Compte [codeCompte=" + codeCompte + ", dateCreation=" + dateCreation + ", solde=" + solde + ", client="
+				+ client + "]";
+	}
+
 	
 	
 }

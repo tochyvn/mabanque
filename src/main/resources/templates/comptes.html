@@ -1,5 +1,6 @@
+<!-- ATTENTION THYMELEAF DOIT RESPECTER LA NORME XHTML -->
 <!DOCTYPE html>
-<html xmlns:th="http://ww.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorator="template1">
 <head>
@@ -8,7 +9,176 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<h3>Test</h3>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Consultation d'un compte</div>
+					<div class="panel-body">
+						<form class="form-inline" th:action="@{/consulter-compte}"
+							method="get">
+							<div class="form-group">
+								<label for="code-compte">Code Compte</label> <input type="text"
+									class="form-control" id="code-compte" name="codeCompte"
+									placeholder="Numero de compte" />
+							</div>
+							<button type="submit" class="btn btn-default">Rechercher</button>
+						</form>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">Informations sur le compte</div>
+					<div class="panel-body" th:if="${compte != null}">
+						<div>
+							<span>Client : </span> <span th:text="${compte.client.nom}">Ce
+								Nom du client</span>
+						</div>
+						<div>
+							<span>Code Compte : </span> <span th:text="${compte.codeCompte}">Ce
+								Code compte</span>
+						</div>
+						<div>
+							<span>Solde : </span> <span th:text="${compte.solde}">Ce
+								Solde</span>
+						</div>
+						<div>
+							<span>Date de création : </span> <span
+								th:text="${compte.dateCreation}">Ce Compte est inexistant</span>
+						</div>
+						<div th:if="${compte.class.simpleName == 'CompteCourant'}">
+							<div>
+								<span>Type de compte : </span> <span>Compte Courant</span>
+							</div>
+							<div>
+								<span>Découvert : </span> <span th:text="${compte.decouvert}">0.00</span>
+							</div>
+						</div>
+						<div th:unless="${compte.class.simpleName == 'CompteCourant'}">
+							<div>
+								<span>Type de compte : </span> <span>Compte epargne</span>
+							</div>
+							<div>
+								<span>Taux : </span> <span th:text="${compte.taux}">Taux</span>
+							</div>
+							<div>
+								<span>Plafond : </span> <span th:text="${compte.plafond}">Plafond</span>
+							</div>
+						</div>
+
+					</div>
+					<div class="panel-body" th:unless="${compte != null}">
+						<span th:text="${exception}">Affichage message d'erreur</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Opération sur le compte</div>
+					<div class="panel-body">
+						<div class="row">
+							<!-- 							<div class="col-md-3"> -->
+
+							<!-- 							</div> -->
+							<div class="col-md-12">
+								<form th:action="@{/transaction}" th:method="post"
+									class="form-horizontal">
+									<div class="form-group">
+										<div class="col-md-12">
+											<label class="control-label">Compte : </label> <label
+												class="control-label" th:if="${compte != null}"><span
+												th:text="${compte.codeCompte}">code du compte</span></label> <label
+												class="control-label" th:unless="${compte != null}"><span
+												th:text="'N/A'">code du compte inexistant</span></label>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12">
+											<label class="control-label"> <input type="radio"
+												name="type-operation" id="versement" value="versement"
+												checked="checked" /> Versement
+											</label> <label class="control-label"> <input type="radio"
+												name="type-operation" id="retrait" value="retrait" />
+												Retrait
+											</label> <label class="control-label"> <input type="radio"
+												name="type-operation" id="virement" value="virement" />
+												Virement
+											</label>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-md-12">
+											<label class="col-md-2 control-label" for="montant">Montant:</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" id="montant"
+													name="montant" />
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group" id="compte-destinataire">
+										<div class="col-md-12">
+											<label class="col-md-2 control-label" for="destinataire">Vers:</label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" id="destinataire"
+													name="destinataire" />
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="col-sm-offset-2 col-sm-10">
+											<button type="submit" class="btn btn-default">Effectuer
+												la transaction</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">Liste des opérations</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Num</th>
+										<th>Type</th>
+										<th>Date</th>
+										<th>Montant</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="operation : ${operations}">
+										<td th:text="${operation.numero}">Numero</td>
+										<td th:text="${operation.class.simpleName}">Retrait</td>
+										<td th:text="${operation.dateOperation}">Date</td>
+										<td th:text="${operation.montant}">Montant</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- <div class="panel panel-primary">
+					<div class="panel-heading">Voici les informations sur le
+						compte</div>
+					<div class="panel-body">
+						<div>
+							<p>
+								Account informations <span th:text="${compte}"></span>
+							</p>
+						</div>
+					</div>
+				</div> -->
+
+			</div>
+		</div>
+
 	</div>
 </body>
 </html>

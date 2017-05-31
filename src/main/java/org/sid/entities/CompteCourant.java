@@ -42,6 +42,12 @@ public class CompteCourant extends Compte {
 	public double getMaxRetrait() {
 		return this.solde + decouvert;
 	}
+
+	@Override
+	public String toString() {
+		return "CompteCourant [decouvert=" + decouvert + ", codeCompte=" + codeCompte + ", dateCreation=" + dateCreation
+				+ ", solde=" + solde + ", client=" + client + ", Type Compte = Compte Courant]";
+	}
 	
 	
 	

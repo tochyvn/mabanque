@@ -10,6 +10,7 @@ import org.sid.entities.Compte;
 import org.sid.entities.CompteCourant;
 import org.sid.entities.CompteEpargne;
 import org.sid.entities.Versement;
+import org.sid.entities.Exception.CompteIntrouvableException;
 import org.sid.metier.IBanqueMetier;
 import org.sid.metier.IClientMetier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,12 @@ public class MaBanqueApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		/*Client c1 = clientRepository.save(new Client("TOCHAP", "tochlionimy@gmail.com"));
+		Client c1 = clientRepository.save(new Client("TOCHAP", "tochlionimy@gmail.com"));
 		Client c2 = clientRepository.save(new Client("FAIDATI", "fadaitihafhi@gmail.com"));
 		Client c3 = clientRepository.save(new Client("vbnvbnb", "tochlion@live.com"));
+		
+		Client c4 = clientRepository.save(new Client("Tochyvn-Hack", "tochlion@yahoo.fr"));
+		clientMetier.addClient(c4);
 		
 		Compte cpteCour = new CompteCourant("c1", new Date(), 90000, c1, 6000);
 		Compte cp1 = compteRepository.save(cpteCour);
@@ -53,20 +57,25 @@ public class MaBanqueApplication implements CommandLineRunner {
 		Compte cp3 = compteRepository.save(cpteCour1);
 		
 		
-		operationRepository.save(new Versement(new Date(), 2300, cp2));
+		/*operationRepository.save(new Versement(new Date(), 2300, cp2));
 		operationRepository.save(new Versement(new Date(), 400, cp2));
 		operationRepository.save(new Versement(new Date(), 2300, cp2));
-		operationRepository.save(new Versement(new Date(), 3000, cp2));
+		operationRepository.save(new Versement(new Date(), 3000, cp2));*/
 		
 		
 		metier.verser(cp1.getCodeCompte(), 1000);
 		metier.verser("c2", 1000);
 		metier.retirer("c2", 500);
+		metier.virement("c1", "c3", 96000);
 		
-		metier.virement("c1", "c3", 96000);*/
-		
-		Client c3 = clientRepository.save(new Client("Tochyvn-Hack", "tochlion@yahoo.fr"));
-		clientMetier.addClient(c3);
+		System.out.println("\n================================= Debut Consultation de comptes ======================================\n");
+		try {
+			Compte selectedAccount = metier.consulterCompte("c4");
+			System.out.println(selectedAccount);
+		} catch (CompteIntrouvableException e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println("\n================================= Fin consultation de comptes ======================================\n");
 		
 	}
 	

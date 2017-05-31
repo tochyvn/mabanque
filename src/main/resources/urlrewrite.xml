@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlrewrite>
+	<!-- 
+	<rule>
+       <from>^/demo/api.do?method=getUser&amp;uid=(.*)$</from>
+       <to>/demo/api/user/$1</to>
+    </rule>
+	 -->
+    <rule>
+       <from>/consulter-compte/$1</from>
+       <to>/consulter-compte?codeCompte=([0-9a-z]*)</to>
+    </rule>
+</urlrewrite>

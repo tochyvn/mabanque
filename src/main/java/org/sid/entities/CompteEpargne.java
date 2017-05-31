@@ -54,5 +54,11 @@ public class CompteEpargne extends Compte {
 	public void setTaux(double taux) {
 		this.taux = taux;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "CompteEpargne [plafond=" + plafond + ", taux=" + taux + ", codeCompte=" + codeCompte + ", dateCreation="
+				+ dateCreation + ", solde=" + solde + ", client=" + client + "]";
+	}
+
 }
