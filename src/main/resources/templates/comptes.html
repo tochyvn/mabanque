@@ -65,7 +65,8 @@
 						</div>
 
 					</div>
-					<div class="panel-body" th:unless="${compte != null}">
+					<div class="panel-body alert alert-danger"
+						th:if="${exception != null}">
 						<span th:text="${exception}">Affichage message d'erreur</span>
 					</div>
 				</div>
@@ -85,23 +86,25 @@
 									<div class="form-group">
 										<div class="col-md-12">
 											<label class="control-label">Compte : </label> <label
-												class="control-label" th:if="${compte != null}"><span
-												th:text="${compte.codeCompte}">code du compte</span></label> <label
-												class="control-label" th:unless="${compte != null}"><span
-												th:text="'N/A'">code du compte inexistant</span></label>
+												class="control-label" th:if="${compte != null}"> <span
+												th:text="${compte.codeCompte}">code du compte</span> <input
+												type="hidden" name="codeCompte"
+												th:value="${compte.codeCompte}" />
+											</label> <label class="control-label" th:unless="${compte != null}"><span
+												th:text="'N/A'">code du compte inexistant</span> </label>
 										</div>
 									</div>
 									<div class="form-group">
 										<div class="col-md-12">
 											<label class="control-label"> <input type="radio"
-												name="type-operation" id="versement" value="versement"
-												checked="checked" /> Versement
+												name="typeOperation" id="versement" value="versement" checked="checked" />
+												Versement
 											</label> <label class="control-label"> <input type="radio"
-												name="type-operation" id="retrait" value="retrait" />
+												name="typeOperation" id="retrait" value="retrait" th:checked="${typeOperation == 'retrait'} ? 'checked' : '' "/>
 												Retrait
 											</label> <label class="control-label"> <input type="radio"
-												name="type-operation" id="virement" value="virement" />
-												Virement
+												name="typeOperation" id="virement" value="virement"
+												th:checked="${typeOperation == 'virement'} ? 'checked' : '' " /> Virement
 											</label>
 										</div>
 									</div>

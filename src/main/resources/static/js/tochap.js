@@ -11,7 +11,7 @@ $(document).ready(function() {
 	
 	compte_destinataire.hide();
 	
-	$("input[name=type-operation]:radio").change(function () {
+	$("input[name=typeOperation]:radio").change(function () {
 		var selected = $(this).attr('id');
 		if (selected == 'virement') {
 			compte_destinataire.show();

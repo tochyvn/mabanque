@@ -9,6 +9,7 @@ import org.sid.entities.Operation;
 import org.sid.entities.Retrait;
 import org.sid.entities.Versement;
 import org.sid.entities.Exception.CompteIntrouvableException;
+import org.sid.entities.Exception.CompteVirementException;
 import org.sid.entities.Exception.SoldeInsuffisantException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,25 +46,32 @@ public class BanqueMetierImpl implements IBanqueMetier {
 		compte = this.consulterCompte(codeCpte);
 		Operation versement = new Versement(new Date(), montant, compte);
 		//insertion du versement
-		operationRepository.save(versement);
-		compte.incrementer(montant);
-		//Mise à jour du compte
-		compteRepository.save(compte);
+		if (compte != null) {
+			operationRepository.save(versement);
+			compte.incrementer(montant);
+			//Mise à jour du compte
+			compteRepository.save(compte);
+		} else {
+			throw new CompteIntrouvableException("Le numéro de compte que vous avez saisie n'existe pas!!!");
+		}
 	}
 
 	@Override
 	public void retirer(String codeCpte, double montant) throws Exception {
 		Compte compte = this.consulterCompte(codeCpte);
-		if (! compte.ifPossible(montant)) {
-			throw new SoldeInsuffisantException("Solde insuffisant!!!! [Votre retrait max est de "
-				+ "" + compte.getMaxRetrait() + " et vous voulez retirer " + montant + "]");
-		} else {
-			Operation retrait = new Retrait(new Date(), montant, compte);
-			//Insertion du retrait
-			operationRepository.save(retrait);
-			//On met a jour le compte
-			compte.decrementer(montant);
-			compteRepository.save(compte);
+		if (compte != null) {
+			if (! compte.ifPossible(montant)) {
+				System.out.println("Solde insuffisant pour effectuer un retrait");
+				throw new SoldeInsuffisantException("Solde insuffisant!!!! [Votre retrait max est de "
+					+ "" + compte.getMaxRetrait() + " et vous voulez retirer " + montant + "]");
+			} else {
+				Operation retrait = new Retrait(new Date(), montant, compte);
+				//Insertion du retrait
+				operationRepository.save(retrait);
+				//On met a jour le compte
+				compte.decrementer(montant);
+				compteRepository.save(compte);
+			}
 		}
 	}
 
@@ -72,7 +80,7 @@ public class BanqueMetierImpl implements IBanqueMetier {
 		Compte compteEmetteur = this.consulterCompte(codeCpte1);
 		Compte compteRecepteur = this.consulterCompte(codeCpte2);
 		if (compteEmetteur == null ||  compteRecepteur == null) {
-			throw new RuntimeException("Veuillez selectionner un compte emetteur et un compte recepteur");
+			throw new CompteVirementException();
 		} else {
 			//On retire dans le compte emetteur
 			this.retirer(codeCpte1, montant);
