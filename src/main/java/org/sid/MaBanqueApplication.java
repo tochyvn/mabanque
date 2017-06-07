@@ -56,12 +56,10 @@ public class MaBanqueApplication implements CommandLineRunner {
 		Compte cpteCour1 = new CompteCourant("c3", new Date(), 750, c3, 200);
 		Compte cp3 = compteRepository.save(cpteCour1);
 		
-		
 		/*operationRepository.save(new Versement(new Date(), 2300, cp2));
 		operationRepository.save(new Versement(new Date(), 400, cp2));
 		operationRepository.save(new Versement(new Date(), 2300, cp2));
 		operationRepository.save(new Versement(new Date(), 3000, cp2));*/
-		
 		
 		metier.verser(cp1.getCodeCompte(), 1000);
 		metier.verser("c2", 1000);

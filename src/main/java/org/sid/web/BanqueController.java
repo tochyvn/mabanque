@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.sid.entities.Compte;
 import org.sid.entities.Operation;
 import org.sid.entities.Exception.CompteIntrouvableException;
-import org.sid.entities.Exception.SoldeInsuffisantException;
 import org.sid.metier.IBanqueMetier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,39 +65,22 @@ public class BanqueController {
 			
 			Compte selected_account = null;
 			try {
+				
 				selected_account = banqueMetier.consulterCompte(codeCompte);
-			} catch (CompteIntrouvableException e) {
-				model.addAttribute("exception", e.getMessage());
-			}
-			try {
 				montant_double = Double.parseDouble(montant);
-			} catch (NumberFormatException e) {
-				model.addAttribute("exception", "Le montant doit être au format numérique!!!");
-			}
-			
-			if (typeOperation.equals("versement")) {
-				try {
+
+				if (typeOperation.equals("versement")) {
 					banqueMetier.verser(codeCompte, montant_double);
-				} catch (CompteIntrouvableException e) {
-					model.addAttribute("exception", e.getMessage());
-				}
-			} else if (typeOperation.equals("retrait")) {
-				try {
+				} else if (typeOperation.equals("retrait")) {
 					banqueMetier.retirer(codeCompte, montant_double);
-				} catch (Exception e) {
-					System.out.println("==================  " + e.getMessage() + "  ======================");
-					model.addAttribute("exception", e.getMessage());
-				}
-			} else {
-				System.out.println("virementttttttt");
-				try {
+				} else {
 					Compte target_account = banqueMetier.consulterCompte(destinataire);
 					banqueMetier.virement(codeCompte, target_account.getCodeCompte(), montant_double);
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					model.addAttribute("exception", e.getMessage());
 				}
+			} catch (Exception e) {
+				model.addAttribute("exception", e.getMessage());
 			}
+			
 			model.addAttribute("compte", selected_account);
 			ArrayList<Operation> operations = new ArrayList<>(selected_account.getOperations());
 			model.addAttribute("operations", operations);
